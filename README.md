@@ -19,8 +19,8 @@ Export images + annotations (Pascal, COCO, other)
 
 ## Cons
 
-* Uploading all files mmight take time
-* Longer inference time for helper function
+* Uploading all files might take time
+* Longer inference time for helper functions
 
 # Alternative
 
