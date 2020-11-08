@@ -13,6 +13,7 @@ Export images + annotations (Pascal, COCO, other)
 
 ## Pros
 
+* OS independant
 * No installation required
 * Better UI experience
 
