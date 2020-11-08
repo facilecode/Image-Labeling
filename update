@@ -3,5 +3,5 @@
 NOW=$(date +"%m-%d-%Y")
 
 git add .
-git commit -m "$NOW$(1)"
+git commit -m "$NOW$1"
 git push -u origin main
