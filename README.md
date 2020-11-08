@@ -1,24 +1,28 @@
-# image-labeling
+# AI based Web app for image labeling
 
-## Project setup
-```
-npm install
-```
+- Vue based app
+- ONNX, TensorFlow JS based helper functions
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Object Tracking (Next frame object detection)
+Objects localization
+Segmentation
+Resizing images
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Import images
+Export images + annotations (Pascal, COCO, other)
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Pros
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* No installation required
+* Better UI experience
+
+## Cons
+
+* Uploading all files mmight take time
+* Longer inference time for helper function
+
+# Alternative
+
+- Python app
+- QT
+- OpenCV 
