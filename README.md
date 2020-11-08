@@ -24,6 +24,6 @@ Export images + annotations (Pascal, COCO, other)
 
 # Alternative
 
-- Python app
-- QT
-- OpenCV 
+- Python 
+- QT app
+- OpenCV with TensorFlow/ONNX even PyTorch
