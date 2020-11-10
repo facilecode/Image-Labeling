@@ -1,6 +1,7 @@
 # AI based Web app for image labeling
 
 - Vue based app
+- OpenCV-JS for annotations and tracking
 - ONNX, TensorFlow JS based helper functions
 
 Object Tracking (Next frame object detection)
