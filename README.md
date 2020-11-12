@@ -1,4 +1,4 @@
-# AI based Web app for image labeling
+# AI based Web App - Image Labeling
 
 - Vue based app
 - OpenCV-JS for annotations and tracking
