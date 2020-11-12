@@ -21,18 +21,20 @@ ____| ^ |____
 | < | v | > |
 ```
 * Modifying selected bounding box (CTRL for shrinking)
+```
     _____              _____              
 ____| z |____      ____| w |____
 | q | s | d |      | a | s | d |      
-
+```
 * Enter to get the next frame | GUI button
 
 * Space to get the previous frame | GUI button
 
 * Previous | Next ( if no bounding box is selected)
+```
 _____________
 | < | v | > |
-
+```
 ## Pros
 
 * OS independant
