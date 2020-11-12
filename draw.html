@@ -17,55 +17,89 @@
 <body>
     <div id="canvas"></div>
     <!-- <script src="js/initDraw.js"></script> -->
-    <script>
-        function initDraw(canvas) {
-            var mouse = {
-                x: 0,
-                y: 0,
-                startX: 0,
-                startY: 0
-            };
-            function setMousePosition(e) {
-                var ev = e || window.event; //Moz || IE
-                if (ev.pageX) { //Moz
-                    mouse.x = ev.pageX + window.pageXOffset;
-                    mouse.y = ev.pageY + window.pageYOffset;
-                } else if (ev.clientX) { //IE
-                    mouse.x = ev.clientX + document.body.scrollLeft;
-                    mouse.y = ev.clientY + document.body.scrollTop;
-                }
-            };
-
-            var element = null;    
-            canvas.onmousemove = function (e) {
-                setMousePosition(e);
-                if (element !== null) {
-                    element.style.width = Math.abs(mouse.x - mouse.startX) + 'px';
-                    element.style.height = Math.abs(mouse.y - mouse.startY) + 'px';
-                    element.style.left = (mouse.x - mouse.startX < 0) ? mouse.x + 'px' : mouse.startX + 'px';
-                    element.style.top = (mouse.y - mouse.startY < 0) ? mouse.y + 'px' : mouse.startY + 'px';
-                }
-            }
-
-            canvas.onclick = function (e) {
-                if (element !== null) {
-                    element = null;
-                    canvas.style.cursor = "default";
-                    console.log("finsihed.");
-                } else {
-                    console.log("begun.");
-                    mouse.startX = mouse.x;
-                    mouse.startY = mouse.y;
-                    element = document.createElement('div');
-                    element.className = 'rectangle'
-                    element.style.left = mouse.x + 'px';
-                    element.style.top = mouse.y + 'px';
-                    canvas.appendChild(element)
-                    canvas.style.cursor = "crosshair";
-                }
-            }
+<script>
+    class Box {
+        constructor(x_start, y_start) {
+            this.x1 = x_start
+            this.y1 = y_start
         }
-        initDraw(document.getElementById('canvas'));
-    </script>
+        draw(x2, y2) {
+            console.log("draw")
+
+        }
+
+    }
+    // contols
+    CTRL = 17
+    var left = 37
+    var right = 39
+    var up = 38
+    var down = 40
+    // letters
+    var z = 90
+    var q = 81
+    var s = 83
+    var d = 68
+    
+    //
+    function initDraw(canvas) {
+        console.log("canvas in param ", canvas)
+        var mouse = {
+            x: 0,
+            y: 0,
+            startX: 0,
+            startY: 0
+    };
+    function setMousePosition(e) {
+        console.log("set mouse position")
+        var ev = e || window.event; //Moz || IE
+        if (ev.pageX) { //Moz
+            mouse.x = ev.pageX + window.pageXOffset;
+            mouse.y = ev.pageY + window.pageYOffset;
+        } else if (ev.clientX) { //IE
+            mouse.x = ev.clientX + document.body.scrollLeft;
+            mouse.y = ev.clientY + document.body.scrollTop;
+        }
+    };
+
+    var element = null;    
+    canvas.onmousemove = function (e) {
+        //console.log("onmousemove e.keyCode", e.keyCode)
+        setMousePosition(e);
+        if (element !== null) {
+            element.style.width = Math.abs(mouse.x - mouse.startX) + 'px';
+            element.style.height = Math.abs(mouse.y - mouse.startY) + 'px';
+            element.style.left = (mouse.x - mouse.startX < 0) ? mouse.x + 'px' : mouse.startX + 'px';
+            element.style.top = (mouse.y - mouse.startY < 0) ? mouse.y + 'px' : mouse.startY + 'px';
+        }
+    }
+
+    window.onkeydown = function(event) {
+        var key = event.keyCode
+
+        console.log("key ", key)
+    }
+
+    canvas.onclick = function (e) {
+        console.log("canvas.onclick")
+        if (element !== null) {
+            element = null;
+            canvas.style.cursor = "default";
+            console.log("finsihed.");
+        } else {
+            console.log("begun.");
+            mouse.startX = mouse.x;
+            mouse.startY = mouse.y;
+            element = document.createElement('div');
+            element.className = 'rectangle'
+            element.style.left = mouse.x + 'px';
+            element.style.top = mouse.y + 'px';
+            canvas.appendChild(element)
+            canvas.style.cursor = "crosshair";
+        }
+    }
+}
+initDraw(document.getElementById('canvas'));
+</script>
 </body>
 </html>
