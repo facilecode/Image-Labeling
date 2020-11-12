@@ -14,7 +14,7 @@ Export images + annotations (Pascal, COCO, other)
 
 ## Controls
 
-* Bounding box moving without modifying
+* Moving selected bounding box  without modifying its size
 ```
     _____
 ____| ^ |____
