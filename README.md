@@ -15,10 +15,11 @@ Export images + annotations (Pascal, COCO, other)
 ## Controls
 
 * Bounding box moving without modifying
+```
     _____
 ____| ^ |____
 | < | v | > |
-
+```
 * Modifying selected bounding box (CTRL for shrinking)
     _____              _____              
 ____| z |____      ____| w |____
