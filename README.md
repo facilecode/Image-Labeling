@@ -1,4 +1,4 @@
-Drawing boxes on canvas draw.html script
+Drawing boxes on canvas ~draw.html~ script
 
 # AI based Web App - Image Labeling
 
