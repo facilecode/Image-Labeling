@@ -9,7 +9,7 @@
         background-color: cornflowerblue;
     }
     .rectangle {
-        border: 10px solid #FF0000;
+        border: 2px solid #FF0000;
         position: absolute;
     }
     </style>
@@ -20,6 +20,7 @@
 <script>
 
 var actual_box = null
+var boxes = []
 // contols
 SHIFT = 16
 SHIFT_PRESSED = false
@@ -42,9 +43,29 @@ class Box {
         set_actual_box(this)
     }
     constructor(x_start, y_start) {
+        this.id = boxes.length 
         this.canvas = document.getElementById('canvas')
         this.element = document.createElement('div');
         this.element.className = 'rectangle'
+        this.clicked = false
+        this.element.onmousedown = function(e) {
+            this.style.border = "10px solid green"
+        }
+        this.element.onmouseup = function(e) {
+            this.style.border = "10px solid red"
+        }
+        /*
+        this.element.onclick = function(e) {
+            this.clicked = !this.clicked
+
+            if (this.clicked) {
+                this.style.border = "10px solid green"
+            }
+            else {
+                this.style.border = "10px solid red"
+            }
+        }
+        */
         this.x1 = x_start
         this.y1 = y_start
         this.x2 = null
@@ -144,14 +165,32 @@ class Box {
                 this.w = this.w - 5
                 this.element.style.width = this.w + "px"
             }
-            
         }
     }
+    move_mouse(mouse_x, mouse_y) {
+        
+    }
+    click_into_box(mouse_x, mouse_y) {
+        //console.log("click_into_box ", mouse_x, " - ", mouse_y)
+        //console.log("           box", this.x1, " - ", this.y1)
+        if (mouse_x >= this.x1 && mouse_x <= this.x1 + this.w) {
+            //console.log("box inside check for x")
+            if (mouse_y >= this.y1 && mouse_y <= this.y1 + this.h) {
+                //console.log("box inside OK")
+                return true
+            }
+        }
+        return false
+    }
 }
-var b = new Box(200, 200)
-console.log("b ", b)
-b.draw(100, 100)
-actual_box = b
+var b1 = new Box(200, 200)
+b1.draw(100, 100)
+boxes.push(b1)
+
+var b2 = new Box(50, 50)
+b2.draw(100, 100)
+boxes.push(b2)
+//actual_box = b
 
 function initDraw(canvas) {
     console.log("canvas in param ", canvas)
@@ -160,66 +199,87 @@ function initDraw(canvas) {
         y: 0,
         startX: 0,
         startY: 0
-};
-function setMousePosition(e) {
-    console.log("set mouse position")
-    var ev = e || window.event; //Moz || IE
-    if (ev.pageX) { //Moz
-        mouse.x = ev.pageX + window.pageXOffset;
-        mouse.y = ev.pageY + window.pageYOffset;
-    } else if (ev.clientX) { //IE
-        mouse.x = ev.clientX + document.body.scrollLeft;
-        mouse.y = ev.clientY + document.body.scrollTop;
+    };
+    function get_selected_box_id(mouse_x, mouse_y){
+        var b = null
+        for (var i=0; i<boxes.length; i++) {
+            b = boxes[i]
+            if (b.click_into_box(mouse.x, mouse.y) == true) {
+                console.log("get_selected_box_idconcerned box id=", b.id)
+                return b
+            }
+        }
+        return null
     }
-    //console.log("X:", mouse.x, " - Y:", mouse.y)
-};
+    function setMousePosition(e) {
+        console.log("set mouse position")
 
-var element = null;    
-canvas.onmousemove = function (e) {
-    //console.log("onmousemove e.keyCode", e.keyCode)
-    setMousePosition(e);
-    if (element !== null) {
-        element.style.width = Math.abs(mouse.x - mouse.startX) + 'px';
-        element.style.height = Math.abs(mouse.y - mouse.startY) + 'px';
-        element.style.left = (mouse.x - mouse.startX < 0) ? mouse.x + 'px' : mouse.startX + 'px';
-        element.style.top = (mouse.y - mouse.startY < 0) ? mouse.y + 'px' : mouse.startY + 'px';
+        var ev = e || window.event; //Moz || IE
+        if (ev.pageX) { //Moz
+            mouse.x = ev.pageX + window.pageXOffset;
+            mouse.y = ev.pageY + window.pageYOffset;
+        } else if (ev.clientX) { //IE
+            mouse.x = ev.clientX + document.body.scrollLeft;
+            mouse.y = ev.clientY + document.body.scrollTop;
+        }
+        
+        //console.log("X:", mouse.x, " - Y:", mouse.y)
+    };
+    var element = null;    
+    canvas.onmousemove = function (e) {
+        //console.log("onmousemove e.keyCode", e.keyCode)
+        setMousePosition(e);
+        if (element !== null) {
+            element.style.width = Math.abs(mouse.x - mouse.startX) + 'px';
+            element.style.height = Math.abs(mouse.y - mouse.startY) + 'px';
+            element.style.left = (mouse.x - mouse.startX < 0) ? mouse.x + 'px' : mouse.startX + 'px';
+            element.style.top = (mouse.y - mouse.startY < 0) ? mouse.y + 'px' : mouse.startY + 'px';
+        }
     }
-}
+    window.onkeydown = function(event) {
+        var key = event.keyCode
 
-window.onkeydown = function(event) {
-    var key = event.keyCode
+        console.log("key ", key)
 
-    console.log("key ", key)
-
-    if (MOVE_CONTROLS.includes(key)) {
-        console.log("move control ok")
-        actual_box.move(key)
+        if (MOVE_CONTROLS.includes(key)) {
+            console.log("move control ok")
+            actual_box.move(key)
+        }
+        if (RESIZE_CONTROLS.includes(key)) {
+            console.log("resize control ok")
+            actual_box.resize(key, event.shiftKey)
+        }
     }
-    if (RESIZE_CONTROLS.includes(key)) {
-        console.log("resize control ok")
-        actual_box.resize(key, event.shiftKey)
+    
+    canvas.onclick = function (e) {
+        // check if we did'nt click on existing box
+        var box = get_selected_box_id(mouse.x, mouse.y)
+        if (box != null) {
+            console.log("canvas.onclick box ", box, " with id ", box.id)
+        }
+        // else, we create new box
+        else{
+            console.log("canvas.onclick no box is chosen, box=", box)
+            
+            if (element !== null) {
+                element = null;
+                canvas.style.cursor = "default";
+                console.log("finsihed.");
+            } else {
+                console.log("begun.");
+                mouse.startX = mouse.x;
+                mouse.startY = mouse.y;
+                element = document.createElement('div');
+                element.className = 'rectangle'
+                element.style.left = mouse.x + 'px';
+                element.style.top = mouse.y + 'px';
+                canvas.appendChild(element)
+                canvas.style.cursor = "crosshair";
+            }
+        }
     }
-}
-
-canvas.onclick = function (e) {
-    console.log("canvas.onclick")
-    if (element !== null) {
-        element = null;
-        canvas.style.cursor = "default";
-        console.log("finsihed.");
-    } else {
-        console.log("begun.");
-        mouse.startX = mouse.x;
-        mouse.startY = mouse.y;
-        element = document.createElement('div');
-        element.className = 'rectangle'
-        element.style.left = mouse.x + 'px';
-        element.style.top = mouse.y + 'px';
-        canvas.appendChild(element)
-        canvas.style.cursor = "crosshair";
-    }
-}
-}
+    
+} // end func initDraw
 
 initDraw(document.getElementById('canvas'));
 
