@@ -28,7 +28,7 @@ Export images + annotations (Pascal, COCO, other)
 ____| ^ |____
 | < | v | > |
 ```
-* Modifying selected bounding box (CTRL for shrinking)
+* Modifying selected bounding box (CTRL + * for shrinking) 
 ```
     _____              _____              
 ____| z |____      ____| w |____
