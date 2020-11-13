@@ -19,6 +19,7 @@
     <!-- <script src="js/initDraw.js"></script> -->
 <script>
 
+//var creating_box = null
 var actual_box = null
 var prev_box = null
 var boxes = []
@@ -50,32 +51,60 @@ class Controler {
 class Box {
     set_as_actuel() {
         set_actual_box(this)
-    }
-    constructor(x_start, y_start) {
+    }/*
+    constructor(element) {
+        this.id = boxes.length
+        this.element = element
+        this.selected = false
+        this.x1 = this.element.left
+        this.y1 = this.element.top
+        this.w = this.element.w
+        this.h = this.element.h
+    }*/
+    constructor(x_start, y_start, element) {
+        // from element
+        if (element != null) {
+            this.id = boxes.length
+            this.element = element
+            this.selected = false
+            console.log("constructor creating from element ")
+            console.log("element.style.left ", element.style.left)
+            console.log("element.style.top ", element.style.top)
+            console.log("element.offsetWidth ", element.offsetWidth)
+            console.log("element.offsetHeight ", element.offsetHeight)
+
+            this.x1 = parseInt(this.element.style.left.split("px")[0])
+            this.y1 = parseInt(this.element.style.top.split("px")[0])
+            this.w = this.element.offsetWidth
+            this.h = this.element.offsetHeight
+
+            boxes.push(this)
+            console.log("boxes array ", boxes)
+            //canvas.appendChild(this.element)
+
+            return
+        }
+        // from points
         this.id = boxes.length 
         this.selected = false
         this.canvas = document.getElementById('canvas')
         this.element = document.createElement('div');
         this.element.className = 'rectangle'
-        /*
-        this.element.onmousedown = function(e) {
-            this.style.border = "2px solid green"
-        }
-        */
-        /*
-        this.element.onmouseup = function(e) {
-            this.style.border = "10px solid red"
-        }
-        */
         this.x1 = x_start
         this.y1 = y_start
         this.x2 = null
         this.y2 = null
         this.w = null
         this.h = null
+
+        boxes.push(this)
+        console.log("boxes array ", boxes)
+    }
+    show_on_canvas(){
+        canvas.appendChild(this.element)
     }
     draw(w, h) {
-        console.log("Box.draw()")
+        //console.log("Box.draw()")
         this.w = w
         this.h = h
         this.element.style.width = w + "px"
@@ -185,18 +214,15 @@ class Box {
     }
 }
 // instantiate some voxes
-var b1 = new Box(200, 200)
+var b1 = new Box(200, 200, null)
 b1.draw(100, 100)
-boxes.push(b1)
 
-var b2 = new Box(50, 50)
+var b2 = new Box(50, 50, null)
 b2.draw(100, 100)
-boxes.push(b2)
 
 //actual_box = b1
 
 function initDraw(canvas) {
-    console.log("canvas in param ", canvas)
     var mouse = {
         x: 0,
         y: 0,
@@ -284,6 +310,14 @@ function initDraw(canvas) {
             console.log("canvas.onclick no box is chosen, box=", box)
             
             if (element !== null) {
+                /*
+                console.log("before creating element ")
+                console.log("element.left ", element.style.left)
+                console.log("element.top ", element.style.top)
+                console.log("element.style.width ", element.style.width)
+                console.log("element.style.height ", element.style.height)
+                */
+                var new_box = new Box(null, null, element)
                 element = null;
                 canvas.style.cursor = "default";
                 console.log("finsihed.");
@@ -291,11 +325,17 @@ function initDraw(canvas) {
                 console.log("begun.");
                 mouse.startX = mouse.x;
                 mouse.startY = mouse.y;
+                // my impl
+                //var new_box = new Box()
+                // old impl
                 element = document.createElement('div');
                 element.className = 'rectangle'
                 element.style.left = mouse.x + 'px';
                 element.style.top = mouse.y + 'px';
+
+                //var new_box = new Box(element)
                 canvas.appendChild(element)
+                
                 canvas.style.cursor = "crosshair";
             }
         }
