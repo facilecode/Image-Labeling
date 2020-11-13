@@ -20,6 +20,7 @@
 <script>
 
 var actual_box = null
+var prev_box = null
 var boxes = []
 // contols
 SHIFT = 16
@@ -38,32 +39,32 @@ var D = 68
 MOVE_CONTROLS = [left, right, up, down]
 RESIZE_CONTROLS = [Z, Q, S, D]
 
+class Controler {
+    // a class that containes all boxes
+    // contains a ref to the selected/Actuel box
+    constructor() {
+        this.boxes = boxes
+    }
+}
+
 class Box {
     set_as_actuel() {
         set_actual_box(this)
     }
     constructor(x_start, y_start) {
         this.id = boxes.length 
+        this.selected = false
         this.canvas = document.getElementById('canvas')
         this.element = document.createElement('div');
         this.element.className = 'rectangle'
-        this.clicked = false
+        /*
         this.element.onmousedown = function(e) {
-            this.style.border = "10px solid green"
+            this.style.border = "2px solid green"
         }
+        */
+        /*
         this.element.onmouseup = function(e) {
             this.style.border = "10px solid red"
-        }
-        /*
-        this.element.onclick = function(e) {
-            this.clicked = !this.clicked
-
-            if (this.clicked) {
-                this.style.border = "10px solid green"
-            }
-            else {
-                this.style.border = "10px solid red"
-            }
         }
         */
         this.x1 = x_start
@@ -183,6 +184,7 @@ class Box {
         return false
     }
 }
+// instantiate some voxes
 var b1 = new Box(200, 200)
 b1.draw(100, 100)
 boxes.push(b1)
@@ -190,7 +192,8 @@ boxes.push(b1)
 var b2 = new Box(50, 50)
 b2.draw(100, 100)
 boxes.push(b2)
-//actual_box = b
+
+//actual_box = b1
 
 function initDraw(canvas) {
     console.log("canvas in param ", canvas)
@@ -241,6 +244,11 @@ function initDraw(canvas) {
 
         console.log("key ", key)
 
+        if (actual_box == null) {
+            console.log("actual box is null")
+            return
+        }
+
         if (MOVE_CONTROLS.includes(key)) {
             console.log("move control ok")
             actual_box.move(key)
@@ -256,6 +264,20 @@ function initDraw(canvas) {
         var box = get_selected_box_id(mouse.x, mouse.y)
         if (box != null) {
             console.log("canvas.onclick box ", box, " with id ", box.id)
+
+            // if it's the first selected box of the session
+            if (actual_box == null) {
+                //actual_box.element.style.border = "2px solid red"
+                actual_box = box
+                actual_box.element.style.border = "2px solid green"
+            }
+            // already an actual_box but we're done with
+            else{
+                actual_box.element.style.border = "2px solid red"
+                actual_box = box
+                actual_box.element.style.border = "2px solid green"
+            }
+            
         }
         // else, we create new box
         else{
