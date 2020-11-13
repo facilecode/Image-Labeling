@@ -21,16 +21,21 @@
 
 var actual_box = null
 // contols
-CTRL = 17
-var left = 37
+SHIFT = 16
+SHIFT_PRESSED = false
+
+var left  = 37
 var right = 39
-var up = 38
-var down = 40
+var up    = 38
+var down  = 40
 // letters
-var z = 90
-var q = 81
-var s = 83
-var d = 68
+var Z = 90
+var Q = 81
+var S = 83
+var D = 68
+
+MOVE_CONTROLS = [left, right, up, down]
+RESIZE_CONTROLS = [Z, Q, S, D]
 
 class Box {
     set_as_actuel() {
@@ -44,10 +49,13 @@ class Box {
         this.y1 = y_start
         this.x2 = null
         this.y2 = null
+        this.w = null
+        this.h = null
     }
-
     draw(w, h) {
         console.log("Box.draw()")
+        this.w = w
+        this.h = h
         this.element.style.width = w + "px"
         this.element.style.height = h + 'px'
         this.element.style.left = this.x1 + 'px'
@@ -64,19 +72,79 @@ class Box {
             this.element.style.left = this.x1  + "px"
         }
         if (key == right) {
-            console.log("move left")
+            console.log("move right")
             this.x1 = this.x1 + 5
             this.element.style.left = this.x1 + "px"
         }
         if (key == up) {
-            console.log("move left")
+            console.log("move up")
             this.y1 = this.y1 - 5
             this.element.style.top = this.y1 + "px"
         }
         if (key == down) {
-            console.log("move left")
+            console.log("move down")
             this.y1 = this.y1 + 5
             this.element.style.top = this.y1 + "px"
+        }
+    }
+    resize(key, shift) {
+        if (key == Z) {
+            if (!shift){
+                console.log("expand up")
+                this.h = this.h + 5
+                this.element.style.height = this.h  + "px"
+                this.move(up)
+            }
+            else{
+                console.log("expand up")
+                this.h = this.h - 5
+                this.element.style.height = this.h  + "px"
+                this.move(down)
+            }
+
+        }
+        // resize down
+        if (key == S) {
+            if (!shift) {
+                console.log("expand down")
+                this.h = this.h + 5
+                this.element.style.height = this.h + "px"
+            }
+            else{
+                console.log("expand down")
+                this.h = this.h - 5
+                this.element.style.height = this.h + "px"               
+            }
+
+        }
+        // resize left
+        if (key == Q) {
+            if (!shift) {
+                console.log("expand left")
+                this.w = this.w + 5
+                this.element.style.width = this.w + "px"
+                this.move(left)
+            }
+            else {
+                console.log("shrink left")
+                this.w = this.w - 5
+                this.element.style.width = this.w + "px"
+                this.move(right)
+            }
+        }
+        // resize right
+        if (key == D) {
+            if (!shift){
+                console.log("expand right")
+                this.w = this.w + 5
+                this.element.style.width = this.w + "px"
+            }
+            else{
+                console.log("shrink right")
+                this.w = this.w - 5
+                this.element.style.width = this.w + "px"
+            }
+            
         }
     }
 }
@@ -122,7 +190,15 @@ window.onkeydown = function(event) {
     var key = event.keyCode
 
     console.log("key ", key)
-    actual_box.move(key)
+
+    if (MOVE_CONTROLS.includes(key)) {
+        console.log("move control ok")
+        actual_box.move(key)
+    }
+    if (RESIZE_CONTROLS.includes(key)) {
+        console.log("resize control ok")
+        actual_box.resize(key, event.shiftKey)
+    }
 }
 
 canvas.onclick = function (e) {
