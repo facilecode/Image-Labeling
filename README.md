@@ -1,4 +1,5 @@
 Drawing boxes on canvas draw.html script
+Move default box with keys
 
 Run in terminal
 
