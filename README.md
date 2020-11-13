@@ -1,4 +1,10 @@
-Drawing boxes on canvas ~draw.html~ script
+Drawing boxes on canvas draw.html script
+
+Run in terminal
+
+```
+google-chrome draw.html
+```
 
 # AI based Web App - Image Labeling
 
