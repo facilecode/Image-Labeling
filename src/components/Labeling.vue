@@ -1,117 +1,37 @@
 <template>
-  <v-stage
-    ref="stage"
-    :config="stageSize"
-    @mousedown="handleStageMouseDown"
-    @touchstart="handleStageMouseDown"
-  >
-    <v-layer ref="layer">
-      <v-rect
-        v-for="item in rectangles"
-        :key="item.id"
-        :config="item"
-        @transformend="handleTransformEnd"
-      />
-      <v-transformer ref="transformer" />
-    </v-layer>
-  </v-stage>
+  <div style="height: 800px; width: 1000px; border: 1px solid red; position: relative;">
+    <vue-draggable-resizable style="border:5px solid" @click.native="clicked"  :w="100" :h="100" @dragging="onDrag" @resizing="onResize" :parent="true">
+      <p>X: {{ x }} / Y: {{ y }} - Width: {{ width }} / Height: {{ height }}</p>
+    </vue-draggable-resizable>
+  </div>
 </template>
 
 <script>
-// @ is an alias to /src
-//import HelloWorld from '@/components/HelloWorld.vue'
-//import Konva from 'konva'
-
-const width = window.innerWidth
-const height = window.innerHeight
+//import VueDraggableResizable from 'vue-draggable-resizable'
 
 export default {
-  name: 'Labeler',
-  
-  data() {
+  data: function () {
     return {
-      stageSize: {
-          width: width,
-          height: height
-      },
-      rectangles: [
-        {
-          rotation: 0,
-          x: 10,
-          y: 10,
-          width: 100,
-          height: 100,
-          scaleX: 1,
-          scaleY: 1,
-          stroke: "black",
-          strokeWidth: 4,
-          name: 'rect1',
-          draggable: true,
-        }
-      ],
-      selectedShapeName: ""
+      width: 0,
+      height: 0,
+      x: 0,
+      y: 0
     }
   },
   methods: {
-    handleTransformEnd(e) {
-      // shape is transformed, let us save new attrs back to the node
-      // find element in our state
-      const rect = this.rectangles.find(
-        (r) => r.name === this.selectedShapeName
-      );
-      // update the state
-      rect.x = e.target.x();
-      rect.y = e.target.y();
-      rect.rotation = e.target.rotation();
-      rect.scaleX = e.target.scaleX();
-      rect.scaleY = e.target.scaleY();
-      // change fill
-      rect.strokeWidth = 4
-      //rect.fill = Konva.Util.getRandomColor();
+    clicked: function(){
+        console.log("clicked")
     },
-    handleStageMouseDown(e) {
-      // clicked on stage - clear selection
-      if (e.target === e.target.getStage()) {
-        this.selectedShapeName = '';
-        this.updateTransformer();
-        return;
-      }
-      // clicked on transformer - do nothing
-      const clickedOnTransformer =
-        e.target.getParent().className === 'Transformer';
-      if (clickedOnTransformer) {
-        return;
-      }
-      // find clicked rect by its name
-      const name = e.target.name();
-      const rect = this.rectangles.find((r) => r.name === name);
-      if (rect) {
-        this.selectedShapeName = name;
-      } else {
-        this.selectedShapeName = '';
-      }
-      this.updateTransformer();
+    onResize: function (x, y, width, height) {
+      this.x = x
+      this.y = y
+      this.width = width
+      this.height = height
     },
-    updateTransformer() {
-      // here we need to manually attach or detach Transformer node
-      const transformerNode = this.$refs.transformer.getNode();
-      const stage = transformerNode.getStage();
-      const { selectedShapeName } = this;
-
-      const selectedNode = stage.findOne('.' + selectedShapeName);
-      // do nothing if selected node is already attached
-      if (selectedNode === transformerNode.node()) {
-        return;
-      }
-      if (selectedNode) {
-        // attach to another node
-        transformerNode.nodes([selectedNode]);
-      } else {
-        // remove transformer
-        transformerNode.nodes([]);
-      }
-      transformerNode.getLayer().batchDraw();
-    },
-  },
+    onDrag: function (x, y) {
+      this.x = x
+      this.y = y
+    }
+  }
 }
 </script>
