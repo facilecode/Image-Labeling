@@ -1,7 +1,7 @@
 <template>
   <div style="height: 800px; width: 1000px; border: 1px solid red; position: relative;">
     <vue-draggable-resizable style="border:5px solid" @click.native="clicked"  :w="100" :h="100" @dragging="onDrag" @resizing="onResize" :parent="true">
-      <p>X: {{ x }} / Y: {{ y }} - Width: {{ width }} / Height: {{ height }}</p>
+      <p>X: {{ x }} / Y: {{ y }} - W: {{ width }} / H: {{ height }}</p>
     </vue-draggable-resizable>
   </div>
 </template>
